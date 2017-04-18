@@ -65,8 +65,14 @@
 							<div id="map" class="map-responsive" style="height: 400px">
 								
 							</div>
-							<br>
-							<button class="btn btn-primary" id="load" >Show Locations</button> 
+							<div class="row">
+							  <div class="col-sm-4"><button class="btn btn-primary" id="load" style="background-color: green" >Show all places</button></div>
+							  <div class="col-sm-4">Show places within range: (Kilometers)</div>
+							  <div class="col-sm-4"><input type="number" id="RangNumber" max=30 min=0 value=0 style="color:black; width:10%" step="1" onchange="rfdst()"></div>
+							  <div class="col-sm-4"><input type="range" id="myRange" value="90"></div>
+							</div>					
+							
+							
           						<p id="clima" ></p>
           						<p id="geo"></p>
 								<!--<h2 class="major">Work</h2>
@@ -376,6 +382,22 @@
 			<div id="bg"></div>
 
 		<!-- Scripts -->
+		<script type="text/javascript">
+
+		var numInput = document.querySelector('input');
+
+		// Listen for input event on numInput.
+		numInput.addEventListener('input', function(){
+    	// Let's match only digits.
+    	var num = this.value.match(/^0*([0-9]|[12][0-9]|30)$/);
+    	if (num === null) 
+    	{
+        	// If we have no match, value will be empty.
+        	this.value = "";
+    	}
+    	}, false)
+
+		</script>
 			<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4__Zm0yC8JTbumBRUlHFkPKG4VIsCkKs&callback=initMap">    </script>
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/skel.min.js"></script>

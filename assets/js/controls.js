@@ -1,5 +1,6 @@
 var markers = [];
 var chicago = {lat: 41.85, lng: -87.65};
+var centers={lat: 41.8708, lng: -87.6505};
 var s=0;
 var fahr=0;//affordable  house and renting flag
 function CenterControl(controlDiv, map) {
@@ -8,7 +9,7 @@ function CenterControl(controlDiv, map) {
   var controlUI = document.createElement('div');
   controlUI.className = "controlUI"; 
   controlUI.id="school";
-  controlUI.title = 'Click to recenter the map';
+  controlUI.title = 'Click to center the map on pordue university';
   controlUI.innerHTML='<div class="controlText"><i class="fa fa-graduation-cap" aria-hidden="true"></i></div>';
   controlDiv.appendChild(controlUI);
 
@@ -55,6 +56,6 @@ function CenterControl(controlDiv, map) {
   		   		 {
   		   		 	x.style.backgroundColor='#fff';
   		   		 }*/
-          map.setCenter(chicago);
+          map.setCenter(centers);
         });
 }

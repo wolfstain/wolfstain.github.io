@@ -60,28 +60,45 @@ function initMap()
 
     var myLatLng = centers;
     //Illinois University Marker
-    var image = 'images/i1.png';
+    var image = 'images/ill.png';
+
+
     var Umarker = new google.maps.Marker({
         position: myLatLng,
         map: map,
         title: 'Department of Computer Science – University of Illinois!',
         icon: image
     });
+
+     Umarker.addListener('click', function() {
+                        //alert(this["tiempo"]);
+                        var latLng = marker.getPosition();
+                        map.setCenter( centers );
+                                              //panTo(latLng);
+                        alert(this["position"]+this["distancia"]);                        
+
+                    });
+
     google.maps.event.addListenerOnce(map, 'idle', function() {
         window.dispatchEvent(new Event('resize'));
     });
+
+    var btnload=document.getElementById("load");
     
-    document.getElementById("load").addEventListener("click", function() {
+    btnload.addEventListener("click", function() {
         if( fahr==0)
         {
             loadDtsahr();
+            btnload.innerText="Hide all places";
+            btnload.style.backgroundColor="red";
             fahr=1;    
         }
         else
         {
             clearDtsahr();
+            btnload.innerText="Show all places";
+            btnload.style.backgroundColor="green";
             fahr=0;
-            alert("clear");
         }
         
     });
