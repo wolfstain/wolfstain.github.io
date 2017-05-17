@@ -1919,6 +1919,7 @@
 
 .map-responsive {
 	margin-bottom: 4%;
+	height: 400px;
 }
 
 
@@ -2172,3 +2173,12 @@ input::-moz-focus-inner,
 input::-moz-focus-outer {
   border: 0;
 }
+
+.infostyle{
+	font-weight: bold;
+}
+
+.loadbutton{
+	background-color: green;
+}
+

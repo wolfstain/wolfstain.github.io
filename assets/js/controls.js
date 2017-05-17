@@ -1,20 +1,22 @@
-var markers = [];
-var chicago = {lat: 41.85, lng: -87.65};
-var centers={lat: 41.8708, lng: -87.6505};
-var s=0;
-var fahr=0;//affordable  house and renting flag
 
 
-
+//affordable  house and renting flag
 
 
 function UpdateRangeBar(val){
-
+  if(val===undefined)
+    {
+      return;
+    }
    document.getElementById('myRange').value=val; 
    document.getElementById('user').innerHTML = 'mike'; 
    rfdst();
 }
 function UpdateRangeField(val){
+  if(val===undefined)
+  {
+    return;
+  }
    document.getElementById('RangNumber').value=val; 
    rfdst();
 }
@@ -27,7 +29,6 @@ function ButtonNeighborhood(){
     {
      
      var com=document.getElementById("barrio");
-     alert(com.innerHTML);
      if(com.innerHTML!="")
      {
         loadneighborhood(com.innerHTML);  
@@ -44,7 +45,7 @@ function ButtonNeighborhood(){
 function ButtonAll(){
 
     var btnload=document.getElementById("load");
-    
+    var fahr=0;
     btnload.addEventListener("click", function() {
         if( fahr==0)
         {
@@ -77,6 +78,7 @@ function CenterControl(controlDiv, map) {
   // Set CSS for the control interior.
 
   controlUI.addEventListener('click', function() {
+    var s=0;
   	var x = document.getElementById('school');
   	//this.style.backgroundColor='#ff2';
   	if(s==0)
@@ -89,7 +91,12 @@ function CenterControl(controlDiv, map) {
   		this.style.backgroundColor='#fff'; 
   		s=0;
   	}
-
-          map.setCenter(centers);
+    var centers=
+          map.setCenter(centering());
         });
+}
+
+function centering()
+{
+  return {lat: 41.8708, lng: -87.6505};
 }

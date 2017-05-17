@@ -1,21 +1,18 @@
-var arr;
-var markers = [];
-var active=0;
-var centers={lat: 41.8708, lng: -87.6505};
- var chicago = {lat: 41.85, lng: -87.65};
 
-
-
-function reset()//Funcion necesaria para la visualización correcta del mapa
+function reset()/*Funcion necesaria para la visualización correcta del mapa debido a la incompatibilidad inicial de la plantilla*/
 {
     if(map!=null){
     google.maps.event.trigger(map, 'resize'); 
-    map.setCenter(centers); 
+    map.setCenter(centering()); 
     }    
 }
 
 function initMap() 
 {
+    ini();
+    var centers={lat: 41.8708, lng: -87.6505};
+ var chicago = {lat: 41.85, lng: -87.65};
+    var active=0;
     var mapCanvas = document.getElementById("map");
     var mapOptions = 
       {
@@ -43,22 +40,20 @@ function initMap()
 
 
     map.data.loadGeoJson('https://data.cityofchicago.org/api/geospatial/cauq-8yn6?method=export&format=GeoJSON');
-    //map.data.loadGeoJson('https://storage.googleapis.com/maps-devrel/google.json');
 
         map.data.setStyle({
             fillColor: 'green',
             title: 'LALAALALAND',
             strokeColor: 'blue'
             });
-
-    //Para solucionar el problema de tamaño
+   
     map.data.addListener('click', function(event) 
     {
         
         document.getElementById("barrio").innerHTML = event.feature.getProperty('community');
 
         alert(event.latLng);
-        //alert(  google.maps.geometry.poly.containsLocation(event.latLng, this) );
+        
         if(active!=0)
         {
              map.data.overrideStyle(active,{ fillColor: 'green' });
@@ -67,17 +62,13 @@ function initMap()
 
         map.data.overrideStyle(event.feature, { fillColor: 'red' });
 
-        //alert(map.data.type);
-        //document.getElementById("geo").innerHTML = map.data.type;
     }
     );
-    // Set the global styles.
 
+    /*Illinois University Marker*/
     var myLatLng = centers;
-    //Illinois University Marker
+    
     var image = 'images/ill.png';
-
-    //marcador de la U de illinois
     var Umarker = new google.maps.Marker({
         position: myLatLng,
         map: map,
@@ -85,25 +76,25 @@ function initMap()
         icon: image
     });
 
-       //función ONCLICK de la universidad de Illinois
+
      Umarker.addListener('click', function() {
-                        map.setCenter( centers );
+                        map.setCenter( centering() );
                     });
 
     google.maps.event.addListenerOnce(map, 'idle', function() {
         window.dispatchEvent(new Event('resize'));
     });
 
-    //agrega la funcionalidad de carga al btn para mostrar todo
+    /*Add controls behavior from controls.js*/
     ButtonAll();
     ButtonNeighborhood();
       
       
-    // Setup the click event listeners: simply set the map to Chicago.
-        var centerControlDiv = document.createElement('div');
-        var centerControl = new CenterControl(centerControlDiv, map);
-        centerControlDiv.index = 1;
-        map.controls[google.maps.ControlPosition.RIGHT_TOP].push(centerControlDiv);        
+    /* Setup the click event listeners: simply set the map to Chicago.*/
+    var centerControlDiv = document.createElement('div');
+    var centerControl = new CenterControl(centerControlDiv, map);
+    centerControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(centerControlDiv);        
 }
 
     

@@ -1,44 +1,46 @@
- var fl=0;
- var markers = [];
- var dtsahr=[];//affordable housing and rental dataset chicago
- var mrkahr=[];
- var tir=[];
-var chicago = {lat: 41.85, lng: -87.65};
- var urlsahr = "https://data.cityofchicago.org/api/views/s6ha-ppgi/rows.json?";
- var xmlhttp = new XMLHttpRequest();
-        //json format data resource url 
+ var fl=0; /* flag */
+ var dtsahr=[];/* DaTaset Affordable Housing Rentaing. */
+ var mrkahr=[]; /*MR= MaRkers, AHR= Affordable House Renting ---> MrAhr.*/
 
-function rfdst()
+function rfdst()/*function to load markers in select range*/
 {
     var km=document.getElementById("RangNumber").value;
     loadminimum(km);
-}
 
-function loadminimum(distance)
-{
-    if(fl==0)
+        function loadminimum(distance)
     {
-        loadDtsahr();        
-    }
-    clearDtsahr();
-    mrkahr.sort(compare);
-    alert(mrkahr[0]["distancia"]);
-
-    for (i = 0; i < dtsahr.length; i++) 
-    {        
-        if(mrkahr[i]["distancia"]<=distance)
+        if(fl==0)
         {
-            mrkahr[i].setMap(map);
+            loadDtsahr();        
+        }
+        clearDtsahr();
+        mrkahr.sort(compare);
+        alert(mrkahr[0]["distancia"]);
+
+        for (i = 0; i < dtsahr.length; i++) 
+        {        
+            if(mrkahr[i]["distancia"]<=distance)
+            {
+                mrkahr[i].setMap(map);
+            }
         }
     }
 }
 
+
+
 function loadneighborhood(community)
 {
+
+    if(community===undefined)
+  {
+    return;
+  }
     if(fl==0)
     {
         loadDtsahr();        
     }
+
     clearDtsahr();
 
     for (i = 0; i < dtsahr.length; i++) 
@@ -53,10 +55,8 @@ function loadneighborhood(community)
 }
 
 
-xmlhttp.open("GET", urlsahr, true);
-xmlhttp.send();
-
 function distance(lat1, lon1, lat2, lon2, unit) {
+
     var radlat1 = Math.PI * lat1/180
     var radlat2 = Math.PI * lat2/180
     var theta = lon1-lon2
@@ -70,7 +70,8 @@ function distance(lat1, lon1, lat2, lon2, unit) {
     return dist
 }
 
-function compare(a,b) {
+function compare(a,b) /*Custom function to compare closeness to University between two markers*/
+{
   if (a["distancia"] < b["distancia"])
     return -1;
   if (a["distancia"] > b["distancia"])
@@ -78,33 +79,14 @@ function compare(a,b) {
   return 0;
 }
 
-function addMarker(location) {
-        var marker = new google.maps.Marker({
-          position: location,
-          map: map
-        });
-         marker.addListener('click', function() {
-                        document.getElementById("pr").innerHTML = "Name: " + this["title"] + " Address: " + this["address"]; //json.data[i][15]"";
-                        var latLng = marker.getPosition();
-                        panTo(latLng);
-                    });
-        markers.push(marker);
-
-      }
-
- function setMapOnAll(map) {
-        for (var i = 0; i < markers.length; i++) {
-          markers[i].setMap(map);
-        }
-      }
-
-function tiempos(posicion)
+function tiempos(posicion) /*Custom function to get Google maps estimated time from marker to university*/
 {
-        var destination = posicion; // using string
+        var chicago = {lat: 41.85, lng: -87.65};
+        var destination = posicion; 
         var directionsService = new google.maps.DirectionsService();
         var request = {
-            origin: chicago, // LatLng|string
-            destination: destination, // LatLng|string
+            origin: chicago, 
+            destination: destination, 
             travelMode: 'WALKING'
         };
 
@@ -118,8 +100,8 @@ function tiempos(posicion)
         } ); 
 
           var request = {
-            origin: chicago, // LatLng|string
-            destination: destination, // LatLng|string
+            origin: chicago, 
+            destination: destination,
             travelMode: 'DRIVING'
         };
 
@@ -133,8 +115,8 @@ function tiempos(posicion)
         } ); 
 
           var request = {
-            origin: chicago, // LatLng|string
-            destination: destination, // LatLng|string
+            origin: chicago, 
+            destination: destination, 
             travelMode: 'BICYCLING'
         };
 
@@ -150,9 +132,7 @@ function tiempos(posicion)
 }
 
 
-
-
-function loadDtsahr()
+function loadDtsahr() /*Custom function to load all the house renting options with their main caracteristics*/
 {
 
     for (i = 0; i < dtsahr.length; i++) 
@@ -176,14 +156,11 @@ function loadDtsahr()
                         //alert(this["tiempo"]);
                         var latLng = this["position"];
                         map.setCenter( latLng );
-                                              //panTo(latLng);
                         document.getElementById("titulo").innerHTML=this["title"];
                         document.getElementById("dir").innerHTML=this["address"];
                         document.getElementById("distan").innerHTML=this["distancia"]+" Kilometers";
                         document.getElementById("comu").innerHTML=this["comunidad"];                        
-                        tiempos(this["position"]); 
-                        //document.getElementById("leg").innerHTML=alert(tiempos(this["position"]));                                    
-
+                        tiempos(this["position"]);                       
                     });
         mrkahr.push(marker);
     }
@@ -191,26 +168,34 @@ function loadDtsahr()
     fl="1";
 }
 
-function clearDtsahr()
+
+
+function clearDtsahr() /*function to clear the temporal dataset*/
 {
     for (var i = 0; i < mrkahr.length; i++) 
     {
           mrkahr[i].setMap(null);
     }      
-    //mrkahr = [];
 }
 
-xmlhttp.onreadystatechange = function() 
+function ini() /*function to get house renting data from chicago city portal*/
 {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
+        var urlsahr = "https://data.cityofchicago.org/api/views/s6ha-ppgi/rows.json?";
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", urlsahr, true);
+        xmlhttp.send();
+    xmlhttp.onreadystatechange = function() 
     {
-    var myArr = xmlhttp.responseText;
-    var text = myArr;
-    var json = JSON.parse(text);
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
+        {
+            var myArr = xmlhttp.responseText;
+            var text = myArr;
+            var json = JSON.parse(text);
 
-    for (i = 0; i < Object.keys(json.data).length; i++) 
-    {
-        dtsahr.push(json.data[i]);
+            for (i = 0; i < Object.keys(json.data).length; i++) 
+            {
+                dtsahr.push(json.data[i]);
+            }
+        }
     }
-}
 }
