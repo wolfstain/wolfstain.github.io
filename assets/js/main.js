@@ -15,6 +15,36 @@
 		xxsmall:	'(max-width: 360px)'
 	});
 
+	$(document).ready(function(){
+		
+    $(".nav-tabs a").click(function()
+    {
+    	var s=$(this).attr("href");
+    	if(s==="#BasicSearch")
+    	{
+    		document.getElementById("BasicSearch").className="fade show";	
+    		document.getElementById("AdvancedSearch").className="fade";	
+    		document.getElementById("bs").className="selected";	
+    		document.getElementById("as").className="";	
+    	}
+    	else{
+			document.getElementById("BasicSearch").className="fade";	
+    		document.getElementById("AdvancedSearch").className="fade show";		
+    			document.getElementById("as").className="selected";	
+    		document.getElementById("bs").className="";	
+    		
+    	}
+    	
+
+    	//$("#menu1").addClass("active");
+		//alert($(this).attr("href"));
+    //	alert($('.nav-tabs .active').text());
+        //$('.nav-tabs a[href="#home"]').
+       // var active = $(".tabs").tabs( "option", "active" );
+      	 //active.className = "MyClass";
+    });
+});
+
 	$(function() {
 			//$('#map').hide();
 			var	$window = $(window),

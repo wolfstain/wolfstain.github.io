@@ -1,3 +1,4 @@
+ var time="";
  var fl=0;
  var markers = [];
  var dtsahr=[];//affordable housing and rental dataset chicago
@@ -6,52 +7,14 @@
 var chicago = {lat: 41.85, lng: -87.65};
  var urlsahr = "https://data.cityofchicago.org/api/views/s6ha-ppgi/rows.json?";
  var xmlhttp = new XMLHttpRequest();
+ var km;
         //json format data resource url 
 
 function rfdst()
 {
-    var km=document.getElementById("RangNumber").value;
-    loadminimum(km);
+    km=document.getElementById("RangNumber").value;
+    loadminimum();
 }
-
-function loadminimum(distance)
-{
-    if(fl==0)
-    {
-        loadDtsahr();        
-    }
-    clearDtsahr();
-    mrkahr.sort(compare);
-    alert(mrkahr[0]["distancia"]);
-
-    for (i = 0; i < dtsahr.length; i++) 
-    {        
-        if(mrkahr[i]["distancia"]<=distance)
-        {
-            mrkahr[i].setMap(map);
-        }
-    }
-}
-
-function loadneighborhood(community)
-{
-    if(fl==0)
-    {
-        loadDtsahr();        
-    }
-    clearDtsahr();
-
-    for (i = 0; i < dtsahr.length; i++) 
-    {     
-        console.log(mrkahr[i]["comunidad"]);
-
-        if(mrkahr[i]["comunidad"].toLowerCase()===community.toLowerCase())
-        {
-            mrkahr[i].setMap(map);
-        }
-    }
-}
-
 
 xmlhttp.open("GET", urlsahr, true);
 xmlhttp.send();
@@ -98,59 +61,59 @@ function addMarker(location) {
         }
       }
 
-function tiempos(posicion)
+function tiempos()
 {
-        var destination = posicion; // using string
+    alert("markers.length "+mrkahr.length);
+    for (i=0;i<mrkahr.length;i++)
+    {
+        var destination = mrkahr[i]["position"]; // using string
         var directionsService = new google.maps.DirectionsService();
         var request = {
             origin: chicago, // LatLng|string
             destination: destination, // LatLng|string
-            travelMode: 'WALKING'
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
         };
 
          directionsService.route( request, function( response, status ) 
         {            
             if ( status === 'OK' ) {
                 var point = response.routes[ 0 ].legs[ 0 ];
-                var time=point.duration.text;
-                document.getElementById("walk").innerHTML=time;
+                time=point.duration.text;
+                alert(time);
+                mrkahr[i]["tiempo"]=point.duration.text;                
+               // alert(position+" " +time);
+                //$( '#travel_data' ).html( 'Estimated travel time: ' + point.duration.text + ' (' + point.distance.text + ')' );
             }
-        } ); 
+        } );
+           marker.addListener('click', function() {
+                        //alert(this["tiempo"]);
+                        var latLng = marker.getPosition();
+                        map.setCenter( latLng );
+                                              //panTo(latLng);
+                        alert(this["position"]+this["distancia"]);                        
 
-          var request = {
-            origin: chicago, // LatLng|string
-            destination: destination, // LatLng|string
-            travelMode: 'DRIVING'
-        };
-
-         directionsService.route( request, function( response, status ) 
-        {            
-            if ( status === 'OK' ) {
-                var point = response.routes[ 0 ].legs[ 0 ];
-                var time=point.duration.text;
-                document.getElementById("drive").innerHTML=time;
-            }
-        } ); 
-
-          var request = {
-            origin: chicago, // LatLng|string
-            destination: destination, // LatLng|string
-            travelMode: 'BICYCLING'
-        };
-
-         directionsService.route( request, function( response, status ) 
-        {            
-            if ( status === 'OK' ) {
-                var point = response.routes[ 0 ].legs[ 0 ];
-                var time=point.duration.text;
-                document.getElementById("cycle").innerHTML=time;
-            }
-        } ); 
-    
+                    });
+    }
 }
 
 
+function loadminimum()
+{
+    if(fl==0)
+    {
+        loadDtsahr();        
+    }
+    clearDtsahr();
+    mrkahr.sort(compare);
 
+    for (i = 0; i < dtsahr.length; i++) 
+    {        
+        if(mrkahr[i]["distancia"]<=km)
+        {
+         mrkahr[i].setMap(map);
+        }
+    }
+}
 
 function loadDtsahr()
 {
@@ -169,7 +132,6 @@ function loadDtsahr()
             address: dtsahr[i][12],
             tiempo:"",             
             distancia: distance(41.85, -87.65, lat2, lon2, "K"),
-            comunidad: dtsahr[i][8],
             icon: 'images/house.png'
         });     
         marker.addListener('click', function() {
@@ -177,24 +139,18 @@ function loadDtsahr()
                         var latLng = this["position"];
                         map.setCenter( latLng );
                                               //panTo(latLng);
-                        document.getElementById("titulo").innerHTML=this["title"];
-                        document.getElementById("dir").innerHTML=this["address"];
-                        document.getElementById("distan").innerHTML=this["distancia"]+" Kilometers";
-                        document.getElementById("comu").innerHTML=this["comunidad"];                        
-                        tiempos(this["position"]); 
-                        //document.getElementById("leg").innerHTML=alert(tiempos(this["position"]));                                    
+                        alert(this["position"]+this["distancia"]);                        
 
                     });
         mrkahr.push(marker);
     }
     mrkahr.sort(compare);
-    fl="1";
+    flag="1";
 }
 
 function clearDtsahr()
 {
-    for (var i = 0; i < mrkahr.length; i++) 
-    {
+    for (var i = 0; i < mrkahr.length; i++) {
           mrkahr[i].setMap(null);
     }      
     //mrkahr = [];
@@ -211,6 +167,23 @@ xmlhttp.onreadystatechange = function()
     for (i = 0; i < Object.keys(json.data).length; i++) 
     {
         dtsahr.push(json.data[i]);
+        /*
+        var position = new google.maps.LatLng(json.data[i][19], json.data[i][20]);
+         marker = new google.maps.Marker({
+            position: position,
+            map: map,
+            title: json.data[i][15],
+            address: json.data[i][12]
+        });
+        markers.push(marker);*/ 
+    /*
+        var position = new google.maps.LatLng(json.data[i][19], json.data[i][20]);       
+        marker = new google.maps.Marker({
+            position: position,
+            map: map,
+            title: json.data[i][15],
+            address: json.data[i][12]
+        });*/
     }
 }
 }

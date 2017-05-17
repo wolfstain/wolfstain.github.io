@@ -16,7 +16,8 @@
 		<meta http-equiv="pragma" content="no-cache" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-		
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/bootstrap.js"></script>
 		<noscript>
 		<link rel="stylesheet" href="assets/css/noscript.css" />
 		</noscript>
@@ -61,16 +62,92 @@
 
 						<!-- Work -->
 							<article id="work" style="width: 100rem">
-							<h2 class="major">Work</h2>							
+							<h2 class="major">Chicago Living Search</h2>							
 							<div id="map" class="map-responsive" style="height: 400px">
 								
 							</div>
-							<div class="row">
-							  <div class="col-sm-4"><button class="btn btn-primary" id="load" style="background-color: green" >Show all places</button></div>
-							  <div class="col-sm-4">Show places within range: (Kilometers)</div>
-							  <div class="col-sm-4"><input type="number" id="RangNumber" max=30 min=0 value=0 style="color:black; width:10%" step="1" onchange="rfdst()"></div>
-							  <div class="col-sm-4"><input type="range" id="myRange" value="90"></div>
-							</div>					
+
+
+							<div class="container">
+								<div class="row">
+								  <div id=search class="col search">
+
+										<ul class="nav nav-tabs">							    
+										    <li id="bs" class="selected"><a href="#BasicSearch">Basic Search</a></li>
+										    <li id="as"><a href="#AdvancedSearch">Advanced Search</a></li>
+										  </ul>
+
+										  <div class="tab-content">
+
+										    <div id="BasicSearch" class="tab-pane fade show">
+											  <button class="btn btn-primary" id="load" style="background-color: green" >Show all places</button>
+										      <!--<h3>Menu 1</h3>
+										      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>!-->
+										      <br>
+										      <p> </p>
+
+										    </div>
+
+										    <div id="AdvancedSearch" class="tab-pane fade">
+										     	<div class="col">Show places within range:</div>
+									  			<div class="row">
+									  				<div class="col">
+									  					<input id="myRange" class="range-slider__range" type="range" value="0" min="0" max="30" onchange="UpdateRangeField(this.value);"> 
+									  				</div>
+									  				<div class= "col">									  				
+									  					<input  class="range-slider__value" type="number" id="RangNumber" max=30 min=0 value=0 step="1" onchange="UpdateRangeBar(this.value);"> 
+									  					Kilometers 
+									  				</div>
+									  			<!--<input class="range-slider__value" type="range" id="myRange" max=30 min=0 value=0 onchange="UpdateRangeField(this.value);"></div>-->
+  												<!--<span id="rangeSliderValue" class="range-slider__value">0</span>-->
+										    	</div>
+										    	<div class="row">
+											    	<br>
+											    	<div class="col-7">Show places within current Neigborhood: </div> 
+											    	<div class="col-4"> <span id="barrio"></span> </div>		
+										    	</div>
+										    	 	<br>
+										    	<div class="row">
+										    		<div class="col-4"><button class="btn btn-primary" id="neighborhood" style="background-color: green" >¡Find!</button></div>
+										    	</div>
+										    	<br>
+									  				
+										  </div>
+										</div>
+							      </div>
+								 
+								  <div id=results class="col search">
+
+								  	<div id="results" class="col search">
+									    <h3>Information</h3>
+									    <br>
+									    <p>Title: <span style="font-weight: bold" id="titulo"></span> 
+										<br>Address: <span style="font-weight: bold" id="dir"></span>
+										<br>										
+										Community: <span style="font-weight: bold" id="comu"></span>
+									    <br>
+										Distance to Science Dept.: <span style="font-weight: bold" id="distan"></span>
+										 <br>
+									    Estimated Time: <br>
+									    Driving: <span style="font-weight: bold" id="drive"></span>
+									    <br>
+									    Bicycling: <span style="font-weight: bold" id="cycle"></span>
+									    <br>									    
+									    Walking: <span style="font-weight: bold" id="walk"></span>									    
+									    </p>
+
+									    
+									    
+    									
+									    <br>
+									    <br>
+								 </div>
+
+								 </div>
+									  <!--<div class="col"></div>
+
+									</div>
+							</div>		
 							
 							
           						<p id="clima" ></p>
@@ -79,7 +156,7 @@
 								<span class="image main"><img src="images/pic02.jpg" alt="" /></span>
 								<p>Adipiscing magna sed dolor elit. Praesent eleifend dignissim arcu, at eleifend sapien imperdiet ac. Aliquam erat volutpat. Praesent urna nisi, fringila lorem et vehicula lacinia quam. Integer sollicitudin mauris nec lorem luctus ultrices.</p>
 								<p>Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. Mauris aliquet magna magna sed nunc rhoncus pharetra. Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero. Mauris aliquet magna magna sed nunc rhoncus amet feugiat tempus.</p>
-								-->				
+										
 								
 
 								<p>Adipiscing magna sed dolor elit. Praesent eleifend dignissim arcu, at eleifend sapien imperdiet ac. Aliquam erat volutpat. Praesent urna nisi, fringila lorem et vehicula lacinia quam. Integer sollicitudin mauris nec lorem luctus ultrices.</p>
@@ -88,7 +165,7 @@
 
         						<br>
           						
-
+	-->	
 							</article>
 
 						<!-- About -->
@@ -398,8 +475,7 @@
     	}, false)
 
 		</script>
-			<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4__Zm0yC8JTbumBRUlHFkPKG4VIsCkKs&callback=initMap">    </script>
-			<script src="assets/js/jquery.min.js"></script>
+			<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4__Zm0yC8JTbumBRUlHFkPKG4VIsCkKs&callback=initMap">    </script>			
 			<script src="assets/js/skel.min.js"></script>
 			<script src="assets/js/util.js"></script>
 
