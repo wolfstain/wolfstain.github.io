@@ -52,7 +52,6 @@ function initMap()
         
         document.getElementById("barrio").innerHTML = event.feature.getProperty('community');
 
-        alert(event.latLng);
         
         if(active!=0)
         {

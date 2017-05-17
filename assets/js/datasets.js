@@ -15,7 +15,6 @@ function rfdst()/*function to load markers in select range*/
         }
         clearDtsahr();
         mrkahr.sort(compare);
-        alert(mrkahr[0]["distancia"]);
 
         for (i = 0; i < dtsahr.length; i++) 
         {        
@@ -153,7 +152,6 @@ function loadDtsahr() /*Custom function to load all the house renting options wi
             icon: 'images/house.png'
         });     
         marker.addListener('click', function() {
-                        //alert(this["tiempo"]);
                         var latLng = this["position"];
                         map.setCenter( latLng );
                         document.getElementById("titulo").innerHTML=this["title"];
